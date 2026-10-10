@@ -1,0 +1,153 @@
+[
+{
+"id": "18273",
+"t": "20 Kreuzer - Francis Joseph I",
+"rows": [
+[
+"1868",
+"29 621 005",
+""
+],
+[
+"1869",
+"31 042 105",
+""
+],
+[
+"1870",
+"29 821 875",
+""
+],
+[
+"1872",
+"575 635",
+""
+]
+],
+"edge": "Plain ",
+"mint": "",
+"f": {
+"Issuer": "Austrian Empire",
+"Emperor": "Francis Joseph I (Franz Joseph I) (1848-1916)",
+"Type": "Standard circulation coins",
+"Years": "1868-1872",
+"Value": "20 Kreuzers (0.20)",
+"Currency": "Gulden (decimalized, 1857-1892)",
+"Composition": "Silver (.500)",
+"Weight": "2.7 g",
+"Diameter": "21 mm",
+"Thickness": "1 mm",
+"References": "KM# 2212Standard"
+}
+},
+{
+"id": "20875",
+"t": "20 Kreuzers - Francis Joseph I",
+"rows": [
+[
+"1868 GY F",
+"1 039 346",
+"KM#446.2 Mintage shared with 1868 GYF KM# 445"
+],
+[
+"1868 K B",
+"3 224 057",
+"KM#446.1 Mintage shared with 1868 KB KM# 445"
+],
+[
+"1868 K B",
+"",
+"KM#446.1 Restrike; Proof"
+],
+[
+"1869 GY F",
+"2 298 599",
+"KM#446.2"
+],
+[
+"1869 K B",
+"9 487 455",
+"KM#446.1"
+]
+],
+"edge": "Plain",
+"mint": "GY F Alba Iulia, Romania K B Kremnica, Slovakia (1328-date)",
+"f": {
+"Issuer": "Hungary",
+"King": "Francis Joseph I (Franz Joseph I) (1848-1916)",
+"Type": "Standard circulation coins",
+"Years": "1868-1869",
+"Value": "20 Kreuzers (Krajczár) (0.20)",
+"Currency": "Florin (decimalized, 1857-1892)",
+"Composition": "Silver (.500)",
+"Weight": "2.66 g",
+"Diameter": "21 mm",
+"References": ""
+}
+},
+{
+"id": "33839",
+"t": "20 Kreuzers - Francis Joseph I mule",
+"rows": [
+[
+"1868 K B",
+"",
+""
+],
+[
+"1868 K B",
+"",
+"Restrike, Proof"
+]
+],
+"edge": "Plain",
+"mint": "K B Kremnica, Slovakia (1328-date)",
+"f": {
+"Issuer": "Hungary",
+"King": "Francis Joseph I (Franz Joseph I) (1848-1916)",
+"Type": "Standard circulation coins",
+"Year": "1868",
+"Value": "20 Kreuzers (Krajczár) (0.20)",
+"Currency": "Florin (decimalized, 1857-1892)",
+"Composition": "Silver (.500)",
+"Weight": "2.66 g",
+"Diameter": "21.5 mm",
+"References": ""
+}
+},
+{
+"id": "33841",
+"t": "20 Kreuzers - Francis Joseph I",
+"rows": [
+[
+"1868 GY.F.",
+"",
+"KM#445.2 Mintage shared with 1868 GY.F KM# 446"
+],
+[
+"1868 K.B.",
+"",
+"KM#445.1 Mintage shared with 1868 KB KM# 446"
+],
+[
+"1868 K.B.",
+"",
+"KM#445.1 Proof"
+]
+],
+"edge": "Plain",
+"mint": "GY F Alba Iulia, Romania K B Kremnica, Slovakia (1328-date)",
+"f": {
+"Issuer": "Hungary",
+"King": "Francis Joseph I (Franz Joseph I) (1848-1916)",
+"Type": "Standard circulation coins",
+"Year": "1868",
+"Value": "20 Kreuzers (Krajczár) (0.20)",
+"Currency": "Florin (decimalized, 1857-1892)",
+"Composition": "Silver (.500)",
+"Weight": "2.66 g",
+"Diameter": "21 mm",
+"References": ""
+}
+}
+]

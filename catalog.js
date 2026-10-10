@@ -193,6 +193,8 @@ const CATALOG_FILES = {
     about: 'מטבעות מלאיה ובורנאו הבריטית תחת אליזבת השנייה.' },
   br_cyprus: { region: 'brcolonies', src: 'catalogs/br-cyprus.json', name: 'קפריסין הבריטית', sub: '1879–1955, מגרוש ועד 45 גרוש', groupLabel: 'ערך',
     about: 'מטבעות קפריסין תחת השלטון הבריטי, לפי מלך ושנה.' },
+  austria_20kr: { region: 'europe', countryName: 'אוסטריה-הונגריה', src: 'catalogs/austria-20kr.json', name: '20 קרויצר אוסטרו-הונגרי', sub: '1868–1872, פרנץ יוזף הראשון', groupLabel: 'ערך',
+    about: 'מטבע הכסף של 20 קרויצר: הסוג האוסטרי (וינה, 1868–1872) והסוגים ההונגריים של 1868–1869 (KB ו-GYF), עם כמות ההטבעה.' },
   japan: { region: 'asia', src: 'catalogs/japan.json', name: 'יפן', sub: '1870–היום, מרין ועד 500 ין', groupLabel: 'ערך',
     about: 'מטבעות יפן המודרנית מתקופת מייג׳י ועד רייווה: רין, סן וין, מטבעות הזהב והכסף של מייג׳י ומטבעות ההנצחה, עם כמות ההטבעה של כל שנה.' },
   newfoundland: { region: 'brcolonies', src: 'catalogs/newfoundland.json', name: 'ניו פאונדלנד', sub: '1865–1947, הדומיניון הבריטי', groupLabel: 'ערך',
