@@ -2236,7 +2236,10 @@ function tradeSheetBlock(item) {
 function openTradeExport() {
   const body = $('#adderBody'); body.textContent = '';
   const withPrices = el('input', { type: 'checkbox', id: 'x-prices', checked: true });
-  const withPaid = el('input', { type: 'checkbox', id: 'x-paid' });
+  const withNotes = el('input', { type: 'checkbox', id: 'x-notes' });
+  // a soft expiry: after it the page shows only "expired" (the file itself stays on the recipient's device)
+  const expiry = el('select', { id: 'x-exp' }, [['', 'בלי הגבלה'], ['1', 'יום אחד'], ['3', '3 ימים'], ['7', 'שבוע'], ['30', 'חודש']]
+    .map(([k, t]) => el('option', { value: k, text: t })));
   const title = el('input', { id: 'x-title', value: 'המטבעות שלי למכירה ולהחלפה' });
   const contact = el('input', { id: 'x-contact', placeholder: 'למשל: לפרטים — עומר, 050-...' });
   const msg = el('div', { class: 'msg' });
@@ -2244,7 +2247,8 @@ function openTradeExport() {
   go.addEventListener('click', async () => {
     go.disabled = true; msg.className = 'msg'; msg.textContent = 'מכין את הקובץ...';
     try {
-      const html = await buildTradeExport({ title: title.value.trim() || 'מטבעות למכירה', contact: contact.value.trim(), prices: withPrices.checked, paid: withPaid.checked });
+      const html = await buildTradeExport({ title: title.value.trim() || 'מטבעות למכירה', contact: contact.value.trim(), prices: withPrices.checked, notes: withNotes.checked,
+        expires: expiry.value ? Date.now() + Number(expiry.value) * 864e5 : null });
       const name = 'coins-for-trade-' + new Date().toISOString().slice(0, 10) + '.html';
       const file = new File([html], name, { type: 'text/html' });
       // on a phone: straight to WhatsApp / mail / any app through the share sheet (it needs its own tap, so a second button)
@@ -2265,7 +2269,9 @@ function openTradeExport() {
     el('div', { class: 'field' }, [el('label', { for: 'x-title', text: 'כותרת' }), title]),
     el('div', { class: 'field' }, [el('label', { for: 'x-contact', text: 'פרטי קשר (לא חובה)' }), contact]),
     el('label', { class: 'check', for: 'x-prices' }, [withPrices, ' להציג מחיר מבוקש']),
-    el('label', { class: 'check', for: 'x-paid' }, [withPaid, ' להציג גם מחיר קנייה (בדרך כלל לא)']),
+    el('label', { class: 'check', for: 'x-notes' }, [withNotes, ' להציג את ההערות שכתבתי על המטבעות']),
+    el('div', { class: 'field' }, [el('label', { for: 'x-exp', text: 'תוקף הקובץ' }), expiry,
+      el('small', { class: 'muted', text: 'אחרי התאריך הקובץ יציג רק "פג התוקף". זו הגנה רכה: הקובץ עצמו נשאר אצל מי שקיבל אותו.' })]),
     el('div', { class: 'confirm' }, [go, el('button', { class: 'btn', type: 'button', text: 'סגור', onclick: () => $('#adder').close() })]), msg);
   $('#adder').showModal();
 }
@@ -2274,13 +2280,16 @@ async function buildTradeExport(opt) {
   for (const it of tradeSort(tradeItems(), 'year')) {
     const rec = st.owned.get(it.id) || {};
     const front = await Store.get('photos', it.id), back = await Store.get('photos', it.id + REV);
-    coins.push({ t: it.title, y: it.y || '', c: it.country || '', g: rec.grade || '', n: rec.note || '', m: it.metal, d: it.diam || 25,
+    coins.push({ t: it.title, y: it.y || '', c: it.country || '', g: rec.grade || '', n: opt.notes ? rec.note || '' : '', m: it.metal, d: it.diam || 25,
       mt: it.composition || (it.mkind === 'gold' ? 'זהב' : it.mkind === 'silver' ? 'כסף' : METAL_NAME[it.metal] || ''),
       s: (TRADE_STATUS.find(s => s[0] === it.status) || TRADE_STATUS[0])[1],
-      p: opt.prices && askOf(it) ? askOf(it) : null, pd: opt.paid && rec.paid ? Number(rec.paid) : null, mv: opt.prices ? meltValue(it) : null,
+      p: opt.prices && askOf(it) ? askOf(it) : null, mv: opt.prices ? meltValue(it) : null,
       f: front ? await Photo.toDataURL(front) : '', b: back ? await Photo.toDataURL(back) : '' });
   }
-  const data = JSON.stringify({ title: opt.title, contact: opt.contact, made: new Date().toLocaleDateString('he-IL'), coins }).replace(/</g, '\\u003c');
+  const json = JSON.stringify({ title: opt.title, contact: opt.contact, made: new Date().toLocaleDateString('he-IL'), coins });
+  const bytes = new TextEncoder().encode(json); let bin = '';
+  for (let i = 0; i < bytes.length; i += 0x8000) bin += String.fromCharCode.apply(null, bytes.subarray(i, i + 0x8000));
+  const data = JSON.stringify({ exp: opt.expires || null, b64: btoa(bin) });
   const tpl = await (await fetch('trade-export.html', { cache: 'no-cache' })).text();
   return tpl.replace('__TITLE__', () => opt.title.replace(/[<&]/g, '')).replace('__DATA__', () => data);
 }

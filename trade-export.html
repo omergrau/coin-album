@@ -172,6 +172,10 @@ dl { display: grid; grid-template-columns: auto 1fr; gap: 8px 16px; margin: 0; }
 dt { color: var(--dim); } dd { margin: 0; font-weight: 700; }
 .m-contact { margin-top: 16px; padding: 12px 14px; border-radius: 12px; background: var(--paper-2); font-weight: 600; }
 
+.expired { min-height: 100vh; display: grid; place-content: center; justify-items: center; gap: 14px; text-align: center; padding: 24px; container-type: inline-size; }
+.expired .cover-emblem { width: 110px; font-size: 48px; }
+.expired h1 { margin: 0; font: 900 30px var(--f-display); color: var(--foil); }
+.expired p { margin: 0; color: #e9dcc1; line-height: 1.6; }
 footer { text-align: center; color: rgba(233,220,193,.55); font-size: 12px; padding: 18px 16px calc(18px + env(safe-area-inset-bottom)); }
 @media (prefers-reduced-motion: reduce) { .leaf, .cover, .flip-in, .book { transition: none !important; } }
 </style>
@@ -187,7 +191,15 @@ footer { text-align: center; color: rgba(233,220,193,.55); font-size: 12px; padd
 <dialog id="dlg" aria-label="פרטי המטבע"><div id="m"></div></dialog>
 <footer>נוצר באפליקציית אלבום המטבעות</footer>
 <script>
-const DATA = __DATA__;
+const PACK = __DATA__;
+// past its expiry date the album is not opened at all; the coins travel encoded, not as readable text
+const EXPIRED = !!(PACK.exp && Date.now() > PACK.exp);
+const DATA = EXPIRED ? null : PACK.b64 ? JSON.parse(new TextDecoder().decode(Uint8Array.from(atob(PACK.b64), ch => ch.charCodeAt(0)))) : PACK;
+if (EXPIRED) {
+  document.title = 'פג תוקף האלבום';
+  document.body.innerHTML = '<div class="expired"><div class="cover-emblem">⌛</div><h1>פג תוקף האלבום</h1><p>האלבום הזה היה זמין עד ' + new Date(PACK.exp).toLocaleDateString('he-IL') + '.<br>אפשר לבקש מהשולח גרסה חדשה.</p></div>';
+  throw new Error('expired');
+}
 const COLORS = { silver: 'var(--silver)', gold: 'var(--goldc)', bronze: 'var(--bronze)', copper: 'var(--copper)', cuni: 'var(--cuni)', steel: 'var(--steel)', alu: 'var(--alu)', bimetal: 'var(--bimetal)' };
 const $ = s => document.querySelector(s);
 const esc = s => String(s == null ? '' : s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
@@ -234,6 +246,7 @@ function titlePage() {
   const n = DATA.coins.length;
   return { cls: 'endpaper', html: '<div class="orn">✦ ✦ ✦</div><h1>' + esc(DATA.title) + '</h1><p>' + n + ' מטבעות · עודכן ' + esc(DATA.made) + '</p>' +
     (DATA.contact ? '<p class="contact">' + esc(DATA.contact) + '</p>' : '') +
+    (PACK.exp ? '<p>זמין עד ' + new Date(PACK.exp).toLocaleDateString('he-IL') + '</p>' : '') +
     '<p class="hint">' + (single() ? 'החליקו את הדף ימינה ושמאלה כדי לדפדף' : 'לחצו על החיצים או החליקו כדי לדפדף') + ' · לחיצה על מטבע פותחת אותו</p>' };
 }
 function endPage() {
@@ -361,7 +374,7 @@ function draw() {
 /* ---------- the coin card ---------- */
 function openCoin(i) {
   const c = DATA.coins[i]; if (!c) return;
-  const rows = [['שנה', c.y], ['מדינה', c.c], ['חומר', metalOf(c)], ['מצב', c.g], ['סטטוס', c.s], ['שולם', money(c.pd)], ['ערך המתכת', money(c.mv)], ['הערות', c.n]]
+  const rows = [['שנה', c.y], ['מדינה', c.c], ['חומר', metalOf(c)], ['מצב', c.g], ['סטטוס', c.s], ['ערך המתכת', money(c.mv)], ['הערות', c.n]]
     .filter(r => r[1]).map(r => '<dt>' + r[0] + '</dt><dd>' + esc(r[1]) + '</dd>').join('');
   $('#m').innerHTML = '<div class="m-top"><button class="m-x" aria-label="סגור" id="mx">✕</button>' +
     '<button class="flip" id="flip" aria-label="הפוך את המטבע"><span class="flip-in">' + disc(c, 'f') + disc(c, 'b', 'rev') + '</span></button>' +
